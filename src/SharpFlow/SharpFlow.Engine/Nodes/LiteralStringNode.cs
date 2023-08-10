@@ -1,24 +1,25 @@
 ﻿using VorNet.SharpFlow.Engine.Handles;
-using VorNet.SharpFlow.Engine;
 
-namespace VorNet.SharpFlow.Playground.Nodes
+namespace VorNet.SharpFlow.Engine.Nodes
 {
     public class LiteralStringNode : NodeBase
     {
         private string _literalText;
 
-        public IHandle LiteralText { get { return GetOutputHandleById("literalText"); } }
+        public IHandle LiteralText { get { return GetHandleById("literalText"); } }
 
-        public LiteralStringNode(string literalText)
+        public LiteralStringNode(string id, string literalText)
+            : base(id)
         {
             _literalText = literalText;
             AddHandle(new StringHandle("literalText", IHandle.HandleType.Output));
         }
 
-        public async Task ExecuteAsync()
+        public override Task ExecuteAsync()
         {
-            var outputHandle = GetOutputHandleById("literalText");
+            var outputHandle = GetHandleById("literalText");
             outputHandle.Value = _literalText;
+            return Task.CompletedTask;
         }
     }
 }
