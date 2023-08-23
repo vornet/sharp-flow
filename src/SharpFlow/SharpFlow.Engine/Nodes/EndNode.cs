@@ -9,7 +9,7 @@ namespace VorNet.SharpFlow.Engine.Nodes
         public EndNode()
             : base("end")
         {
-            AddHandle(new ExecHandle("execIn", IHandle.HandleType.Output));
+            AddHandle(new ExecHandle("execIn", IHandle.HandleType.Target));
         }
 
         public override Task ExecuteAsync()

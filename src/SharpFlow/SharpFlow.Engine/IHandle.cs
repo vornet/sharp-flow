@@ -4,8 +4,8 @@
     {
         public enum HandleType
         {
-            Input,
-            Output
+            Target,
+            Source
         }
 
         string Id { get; }

@@ -1,11 +1,11 @@
 ﻿using VorNet.SharpFlow.Engine.Nodes;
 
-namespace VorNet.SharpFlow.Engine
+namespace VorNet.SharpFlow.Engine.Models
 {
     public class Graph
     {
         public List<INode> Nodes { get; } = new List<INode>();
-        public List<Connection> Connections { get; } = new List<Connection>();
+        public List<Edge> Edges { get; } = new List<Edge>();
 
         public Graph()
         {
@@ -13,9 +13,9 @@ namespace VorNet.SharpFlow.Engine
             AddNode(new EndNode());
         }
 
-        public void AddConnection(Connection connection)
+        public void AddEdge(Edge edge)
         {
-            Connections.Add(connection);
+            Edges.Add(edge);
         }
 
         public void AddNode(INode node)
@@ -23,10 +23,17 @@ namespace VorNet.SharpFlow.Engine
             Nodes.Add(node);
         }
 
+        public INode GetNodeById(string id)
+        {
+            return Nodes.FirstOrDefault(node => node.Id == id);
+        }
+
+        public string Name { get; set; }
+
         public StartNode StartNode
         {
             get
-            { 
+            {
                 return (StartNode)Nodes.FirstOrDefault(node => node is StartNode);
             }
         }

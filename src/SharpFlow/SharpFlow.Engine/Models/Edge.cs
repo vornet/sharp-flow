@@ -1,11 +1,11 @@
-﻿namespace VorNet.SharpFlow.Engine
+﻿namespace VorNet.SharpFlow.Engine.Models
 {
-    public class Connection
+    public class Edge
     {
         public IHandle FromHandle { get; }
         public IHandle ToHandle { get; }
 
-        public Connection(IHandle fromHandle, IHandle toHandle)
+        public Edge(IHandle fromHandle, IHandle toHandle)
         {
             FromHandle = fromHandle;
             ToHandle = toHandle;

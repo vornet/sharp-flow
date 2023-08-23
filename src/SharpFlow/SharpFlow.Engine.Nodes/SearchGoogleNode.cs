@@ -2,23 +2,19 @@
 using VorNet.SharpFlow.Engine.Handles;
 using VorNet.SharpFlow.Engine.Nodes;
 
-namespace VorNet.SharpFlow.Playground.Nodes
+namespace VorNet.SharpFlow.Engine.Nodes
 {
-    internal class SearchGoogleNode : NodeBase
+    public class SearchGoogleNode : NodeBase
     {
-        public IHandle SearchText { get { return GetHandleById("searchText"); } }
-
-        public IHandle SearchResult { get { return GetHandleById("searchResult"); } }
-
         public SearchGoogleNode(string id)
             : base(id)
         {
-            AddHandle(new ExecHandle("execIn", IHandle.HandleType.Input));
-            AddHandle(new StringHandle("searchText", IHandle.HandleType.Input));
+            AddHandle(new ExecHandle("execIn", IHandle.HandleType.Target));
+            AddHandle(new StringHandle("searchText", IHandle.HandleType.Target));
 
 
-            AddHandle(new ExecHandle("execOut", IHandle.HandleType.Output));
-            AddHandle(new StringHandle("searchResult", IHandle.HandleType.Output));
+            AddHandle(new ExecHandle("execOut", IHandle.HandleType.Source));
+            AddHandle(new StringHandle("searchResult", IHandle.HandleType.Source));
         }
 
         public override async Task ExecuteAsync()

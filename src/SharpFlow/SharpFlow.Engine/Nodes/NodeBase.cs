@@ -10,6 +10,12 @@
 
         public string Id { get; }
 
+        public double X { get; set; }
+
+        public double Y { get; set; }
+
+        public string Name { get; set; }
+
         public NodeBase(string id)
         {
             Id = id;
@@ -20,7 +26,7 @@
             Handles.Add(handle);
         }
 
-        protected IHandle GetHandleById(string handleId)
+        public IHandle GetHandleById(string handleId)
         {
             return Handles.FirstOrDefault(h => h.Id == handleId);
         }        

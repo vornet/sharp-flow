@@ -1,39 +1,70 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import axios from 'axios';
 import ReactFlow, {
   MiniMap,
   Controls,
   Background,
+  Panel,
   useNodesState,
   useEdgesState,
   addEdge,
 } from 'reactflow';
+import CustomNode from '../CustomNode';
 
 import 'reactflow/dist/style.css';
+import '../custom.css';
 
-const initialNodes = [
-  { id: '1', position: { x: 0, y: 0 }, data: { label: 'Turn off the TV' } },
-  { id: '2', position: { x: 0, y: 100 }, data: { label: 'Turn on the lights' } },
-];
-const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+const nodeTypes = {
+  custom: CustomNode,
+};
 
 export function Home() {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [rfInstance, setRfInstance] = useState(null);
+  const [nodes, setNodes, onNodesChange] = useNodesState();
+  const [edges, setEdges, onEdgesChange] = useEdgesState();
 
-  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
+  useEffect(() => {
+    axios.get('/api/graph/1')
+    .then(function (response) {
+      setNodes(response.data.nodes);
+      console.log(response.data.nodes);
+      setEdges(response.data.edges);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }, []);
+
+  const onConnect = useCallback((params) => setEdges((eds) => {
+    console.log(eds);
+    addEdge(params, eds)
+  }), []);
+
+  const onSave = useCallback(() => {
+    if (rfInstance) {
+      const flow = rfInstance.toObject();
+      console.log(flow);
+    }
+  }, [rfInstance]);
 
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
       <ReactFlow
+        onInit={setRfInstance}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        nodeTypes={nodeTypes}
+        fitView
       >
+        <Panel position="top-right">
+          <button onClick={onSave}>save</button>
+        </Panel>
         <Controls />
         <MiniMap />
-        <Background variant="dots" gap={12} size={1} />
+        <Background color="#aaa" gap={16} />
       </ReactFlow>
     </div>
   );

@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpFlow.Playground", "Sha
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpFlow.Editor", "SharpFlow.Editor\SharpFlow.Editor.csproj", "{18EDEA13-4225-4F09-807F-CB00D374755B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpFlow.Engine.Nodes", "SharpFlow.Engine.Nodes\SharpFlow.Engine.Nodes.csproj", "{703C9164-55D4-4064-94BF-B3562F9A1DB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{18EDEA13-4225-4F09-807F-CB00D374755B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18EDEA13-4225-4F09-807F-CB00D374755B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18EDEA13-4225-4F09-807F-CB00D374755B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{703C9164-55D4-4064-94BF-B3562F9A1DB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{703C9164-55D4-4064-94BF-B3562F9A1DB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{703C9164-55D4-4064-94BF-B3562F9A1DB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{703C9164-55D4-4064-94BF-B3562F9A1DB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
