@@ -1,4 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
+
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+
 import axios from 'axios';
 import ReactFlow, {
   MiniMap,
@@ -47,8 +51,15 @@ export function Home() {
     }
   }, [rfInstance]);
 
+  const onRun = useCallback(() => {
+    if (rfInstance) {
+      const flow = rfInstance.toObject();
+      console.log(flow);
+    }
+  }, [rfInstance]);
+
   return (
-    <div style={{ width: '100vw', height: '100vh' }}>
+    <Box style={{ width: 'calc(100vw - 20px)', height: 'calc(100vh - 80px)' }}>
       <ReactFlow
         onInit={setRfInstance}
         nodes={nodes}
@@ -60,12 +71,13 @@ export function Home() {
         fitView
       >
         <Panel position="top-right">
-          <button onClick={onSave}>save</button>
+          <Button onClick={onRun}>Run</Button>
+          <Button onClick={onSave}>Save</Button>
         </Panel>
         <Controls />
         <MiniMap />
         <Background color="#aaa" gap={16} />
       </ReactFlow>
-    </div>
+    </Box>
   );
 }
