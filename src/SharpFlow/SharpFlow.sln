@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpFlow.Engine", "SharpFl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpFlow.Playground", "SharpFlow.Playground\SharpFlow.Playground.csproj", "{AE04F48F-4B98-4CB2-876A-13FCB7F518EF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpFlow.Editor", "SharpFlow.Editor\SharpFlow.Editor.csproj", "{18EDEA13-4225-4F09-807F-CB00D374755B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpFlow.Web", "SharpFlow.Web\SharpFlow.Web.csproj", "{18EDEA13-4225-4F09-807F-CB00D374755B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpFlow.Engine.Nodes", "SharpFlow.Engine.Nodes\SharpFlow.Engine.Nodes.csproj", "{703C9164-55D4-4064-94BF-B3562F9A1DB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpFlow.Engine.Nodes", "SharpFlow.Engine.Nodes\SharpFlow.Engine.Nodes.csproj", "{703C9164-55D4-4064-94BF-B3562F9A1DB8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,14 +1,22 @@
-﻿namespace VorNet.SharpFlow.Engine.Models
+﻿using System.Text.Json.Serialization;
+
+namespace VorNet.SharpFlow.Engine.Models
 {
     public class Edge
     {
-        public IHandle FromHandle { get; }
-        public IHandle ToHandle { get; }
+        [JsonPropertyName("id")]
+        public string Id { get; set; }
 
-        public Edge(IHandle fromHandle, IHandle toHandle)
-        {
-            FromHandle = fromHandle;
-            ToHandle = toHandle;
-        }
+        [JsonPropertyName("source")]
+        public string Source { get; set; }
+
+        [JsonPropertyName("sourceHandle")]
+        public string SourceHandle { get; set; }
+
+        [JsonPropertyName("target")]
+        public string Target { get; set; }
+
+        [JsonPropertyName("targetHandle")]
+        public string TargetHandle { get; set; }
     }
 }
