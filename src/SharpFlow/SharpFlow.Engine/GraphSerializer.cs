@@ -18,7 +18,7 @@ namespace VorNet.SharpFlow.Engine
                 return new Data.Models.Node
                 {
                     Id = node.Id,
-                    Type = "custom",
+                    Type = "sharpflow",
                     Data = new Data.Models.NodeData
                     {
                         Label = node.Id,

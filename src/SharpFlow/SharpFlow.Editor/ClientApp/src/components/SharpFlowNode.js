@@ -32,7 +32,7 @@ function Select({ handleId, nodeId, position, type }) {
     );
 }
 
-function CustomNode({ id, data }) {
+function SharpFlowNode({ id, data }) {
   return (
     <>
         <div className="custom-node__header">
@@ -54,4 +54,4 @@ function CustomNode({ id, data }) {
   );
 }
 
-export default memo(CustomNode);
+export default memo(SharpFlowNode);

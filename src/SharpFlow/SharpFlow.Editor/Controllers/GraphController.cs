@@ -9,15 +9,6 @@ namespace VorNet.SharpFlow.Editor.Controllers
     [Route("api/[controller]")]
     public class GraphController : ControllerBase
     {
-        /*
-         const initialNodes = [
-            { id: '1', position: { x: 0, y: 0 }, data: { label: 'Turn off the TV' } },
-            { id: '2', position: { x: 0, y: 100 }, data: { label: 'Turn on the lights' } },
-            ];
-        
-        const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }]; */
-
-
         [HttpGet("{id}")]
         public async Task<Graph> GetByIdAsync(string id)
         {
