@@ -1,6 +1,6 @@
 
-using Microsoft.Data.Sqlite;
 using VorNet.SharpFlow.Engine.Data;
+using VorNet.SharpFlow.Engine.Execution;
 using VorNet.SharpFlow.Engine.Executor;
 using VorNet.SharpFlow.Engine.Serilaizer;
 
@@ -13,6 +13,7 @@ namespace SharpFlow.Web
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddSingleton<IBufferedLogger, BufferedLogger>();
             builder.Services.AddSingleton<IGraphExecutor, GraphExecutor>();
             builder.Services.AddSingleton<IGraphSerializer, GraphSerializer>();
             builder.Services.AddSingleton<IMetadataGenerator, MetadataGenerator>();

@@ -33,7 +33,7 @@ namespace VorNet.SharpFlow.Engine.Data
         public async Task SaveGraphAsync(Graph graph)
         {
             string serializedGraph = JsonSerializer.Serialize(graph);
-            await _connection.ExecuteAsync("INSERT into graph (name, data) values (@name, @data)", new { name = graph.Name, data = serializedGraph });
+            await _connection.ExecuteAsync("INSERT into graph (name, data) values (@name, @data) ON CONFLICT(name) DO UPDATE SET data=@data", new { name = graph.Name, data = serializedGraph });
         }
     }
 }

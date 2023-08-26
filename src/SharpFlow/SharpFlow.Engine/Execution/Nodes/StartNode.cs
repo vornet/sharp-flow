@@ -6,8 +6,8 @@ namespace VorNet.SharpFlow.Engine.Execution.Nodes
     {
         public IHandle ExecOut { get { return GetHandleById("execOut"); } }
 
-        public StartNode()
-            : base("", "start")
+        public StartNode(IBufferedLogger logger)
+            : base(logger, "", "start")
         {
             AddHandle(new ExecHandle("execOut", IHandle.HandleDireciton.Source));
         }

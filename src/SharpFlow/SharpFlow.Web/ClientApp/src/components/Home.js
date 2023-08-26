@@ -16,8 +16,8 @@ import ReactFlow, {
   Controls,
   Background,
   Panel,
-  useNodesState,
-  useEdgesState,
+  applyNodeChanges,
+  applyEdgeChanges,
   addEdge,
   useReactFlow,
   ReactFlowProvider
@@ -43,21 +43,20 @@ function FlowCanvas() {
   const connectingNode = useRef(null);
   const [metadata, setMetadata] = useState(null);
   const [loggerOutput, setLoggerOutput] = useState("");
-  const [nodes, setNodes, onNodesChange] = useNodesState();
-  const [edges, setEdges, onEdgesChange] = useEdgesState();
+  const [nodes, setNodes] = useState([]);
+  const [edges, setEdges] = useState([]);
   const { project } = useReactFlow();
 
   useEffect(() => {
     axios.get('/api/metadata')
     .then(function (response) {
-      console.log("yo");
       setMetadata(response.data);
     })
     .catch(function (error) {
       console.log(error);
     });
 
-    axios.get('/api/graph/1')
+    axios.get('/api/graph/foo')
     .then(function (response) {
       setNodes(response.data.nodes);
       setEdges(response.data.edges);
@@ -67,17 +66,26 @@ function FlowCanvas() {
     });
   }, []);
 
-  const onConnect = useCallback((params) => setEdges((eds) => {
-    addEdge(params, eds)
-  }), []);
+  const onConnect = useCallback(
+    (params) => setEdges((eds) => addEdge(params, eds)),
+    [setEdges]
+  );
 
-  const onConnectStart = (_, { nodeId, handleId, handleType }) => {
-    console.log(nodes);
-    console.log(nodeId);
+  const onNodesChange = useCallback(
+    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
+    [setNodes]
+  );
+  const onEdgesChange = useCallback(
+    (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
+    [setEdges]
+  );
+
+  const onConnectStart = useCallback((_, { nodeId, handleId, handleType }) => {
+    console.log("connection started.");
     const node = nodes.find(node => node.id === nodeId);
-    const handle = node.data.handles.find(handle => handle.id === handleId);
-    connectingNode.current = {node, handle}
-  };
+    const handle = node?.data.handles.find(handle => handle.id === handleId);
+    connectingNode.current = {node, handle}    
+  }, [nodes]);
 
   const handleClose = () => {
     setOpen(false);
@@ -96,13 +104,13 @@ function FlowCanvas() {
     [project]
   );
 
-  const onAddNode = (node) => {
+  const onAddNode = useCallback((node) => {
     // we need to remove the wrapper bounds, in order to get the correct position
     const { top, left } = reactFlowWrapper.current.getBoundingClientRect();
 
-    const id = getId();
+    const id = `NewNode${getId()}`;
     const newNode = {
-      id: `NewNode${id}`,
+      id: id,
       type: 'sharpflow',
       // we are removing the half of the node width (75) to center the new node
       position: project({ x: anchorEl.getBoundingClientRect().x - left - 75, y: anchorEl.getBoundingClientRect().y - top }),
@@ -112,7 +120,7 @@ function FlowCanvas() {
     setNodes((nds) => nds.concat(newNode));
     setEdges((eds) => eds.concat({ id, source: connectingNode.current.node.id, sourceHandle: connectingNode.current.handle.id, target: id, targetHandle: node.handles.find(handle => handle.type === connectingNode.current.handle.type).id }));
     setOpen(false);
-  };
+  }, [anchorEl, connectingNode]);
 
   const isValidConnection = (connection) => {
     const sourceHandle = nodes.find(node => node.id === connection.source).data.handles.find(handle => handle.id === connection.sourceHandle);
@@ -143,11 +151,6 @@ function FlowCanvas() {
     .catch(function (error) {
       console.log(error);
     });
-  };
-
-  const commands = {
-    whoami: "jackharper",
-    cd: (directory) => `changed path to ${directory}`
   };
 
   return (
@@ -192,7 +195,7 @@ function FlowCanvas() {
           <Paper sx={{ width: 320, maxWidth: '100%' }}>
             <MenuList>
               {metadata?.nodes?.map(node => (
-                <MenuItem key={node.id} onClick={() => onAddNode(node)}>
+                <MenuItem key={node.displayType} onClick={() => onAddNode(node)}>
                 <ListItemIcon>
                   <Cloud fontSize="small" />
                 </ListItemIcon>

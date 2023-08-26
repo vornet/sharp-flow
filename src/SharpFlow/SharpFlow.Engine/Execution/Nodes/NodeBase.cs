@@ -4,6 +4,8 @@ namespace VorNet.SharpFlow.Engine.Execution.Nodes
 {
     public abstract class NodeBase : INode
     {
+        protected IBufferedLogger BufferedLogger { get; }
+
         public List<IHandle> Handles { get; } = new List<IHandle>();
 
         public IHandle ExecIn { get { return GetHandleById("execIn"); } }
@@ -18,8 +20,11 @@ namespace VorNet.SharpFlow.Engine.Execution.Nodes
 
         public string DisplayType { get; set; }
 
-        public NodeBase(string displayType, string id)
+        public bool AlreadyExecuted { get; private set; }
+
+        public NodeBase(IBufferedLogger bufferedLogger, string displayType, string id)
         {
+            BufferedLogger = bufferedLogger ?? throw new ArgumentNullException(nameof(bufferedLogger));
             DisplayType = displayType;
             Id = id;
         }

@@ -13,6 +13,6 @@ namespace VorNet.SharpFlow.Engine.Models
         [JsonPropertyName("handles")]
         public IEnumerable<Handle> Handles { get; set; }
 
-        public Dictionary<string, object> State { get; set; }
+        public Dictionary<string, object>? State { get; set; }
     }
 }

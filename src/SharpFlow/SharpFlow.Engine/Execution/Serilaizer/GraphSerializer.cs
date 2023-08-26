@@ -8,6 +8,12 @@ namespace VorNet.SharpFlow.Engine.Serilaizer
 {
     public class GraphSerializer : IGraphSerializer
     {
+        private readonly IBufferedLogger _logger;
+        public GraphSerializer(IBufferedLogger logger)
+        {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
         public Models.Graph Serialize(Graph graph)
         {
             Models.Graph result = new Models.Graph();
@@ -48,7 +54,7 @@ namespace VorNet.SharpFlow.Engine.Serilaizer
 
         public Graph Deserialize(Models.Graph graph)
         {
-            Graph result = new Graph();
+            Graph result = new Graph(_logger);
             result.Name = graph.Name;
 
             foreach (Models.Node node in graph.Nodes)
@@ -68,20 +74,23 @@ namespace VorNet.SharpFlow.Engine.Serilaizer
                     continue;
                 }
 
-                INode instance = (INode)Activator.CreateInstance(type, node.Id);
+                INode instance = (INode)Activator.CreateInstance(type, _logger, node.Id);
 
                 instance.X = node.Position.X;
                 instance.Y = node.Position.Y;
 
-                foreach (string key in node.Data.State.Keys)
+                if (node?.Data?.State != null)
                 {
-                    var p = instance.GetType().GetProperty(key);
-                    var valueJsonElement = (JsonElement)node.Data.State[key];
-                    if (valueJsonElement.ValueKind == JsonValueKind.String)
+                    foreach (string key in node.Data.State.Keys)
                     {
-                        p.SetValue(instance, valueJsonElement.GetString());
-                    }
+                        var p = instance.GetType().GetProperty(key);
+                        var valueJsonElement = (JsonElement)node.Data.State[key];
+                        if (valueJsonElement.ValueKind == JsonValueKind.String)
+                        {
+                            p.SetValue(instance, valueJsonElement.GetString());
+                        }
 
+                    }
                 }
 
                 result.AddNode(instance);

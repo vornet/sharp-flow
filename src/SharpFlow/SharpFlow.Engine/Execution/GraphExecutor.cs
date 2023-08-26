@@ -6,11 +6,18 @@ namespace VorNet.SharpFlow.Engine.Executor
 {
     public class GraphExecutor : IGraphExecutor
     {
+        private readonly IBufferedLogger _bufferedLogger;
+
+        public GraphExecutor(IBufferedLogger bufferedLogger)
+        {
+            _bufferedLogger = bufferedLogger ?? throw new ArgumentNullException(nameof(bufferedLogger));
+        }
+
         public async Task<string> ExecuteAsync(Graph graph)
         {
-            StringBuilder outputBuffer = new StringBuilder();
+            List<INode> executedNodes = new List<INode>();
 
-            outputBuffer.AppendLine($"Executing graph {graph.Name}");
+            _bufferedLogger.Log($"Executing graph {graph.Name}");
 
             INode currentNode = graph.StartNode;
 
@@ -26,23 +33,32 @@ namespace VorNet.SharpFlow.Engine.Executor
                     break;
                 }
 
-                foreach (var handle in currentNode.Handles)
+                foreach (var handle in currentNode.Handles.Where(handle => handle.Direction == Handles.IHandle.HandleDireciton.Target))
                 {
-                    if (handle == currentNode.ExecIn || handle == currentNode.ExecOut) { continue; }
+                    if (handle == currentNode.ExecIn) { continue; }
                     var conn = graph.Edges.FirstOrDefault(c => c.ToHandle == handle);
                     if (conn == null) { continue; }
                     var connectedNode = graph.Nodes.FirstOrDefault(node => node.Handles.Contains(conn.FromHandle));
-                    await connectedNode.ExecuteAsync();
+                    if (!executedNodes.Contains(connectedNode))
+                    {
+                        _bufferedLogger.Log($"Executing node {connectedNode.Id}");
+                        await connectedNode.ExecuteAsync();
+                        executedNodes.Add(connectedNode);
+                    }
                     conn.ToHandle.Value = conn.FromHandle.Value;
                 }
 
-                outputBuffer.AppendLine($"Executing node {currentNode.Id}");
-                await currentNode.ExecuteAsync();
+                if (!executedNodes.Contains(currentNode))
+                {
+                    _bufferedLogger.Log($"Executing node {currentNode.Id}");                
+                    await currentNode.ExecuteAsync();
+                    executedNodes.Add(currentNode);
+                }
             }
 
-            outputBuffer.AppendLine($"Finished graph {graph.Name}");
+            _bufferedLogger.Log($"Finished graph {graph.Name}");
 
-            return outputBuffer.ToString();
+            return _bufferedLogger.GetBuffer();
         }
     }
 }

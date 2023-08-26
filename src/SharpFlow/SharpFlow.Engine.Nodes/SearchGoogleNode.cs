@@ -1,12 +1,13 @@
-﻿using VorNet.SharpFlow.Engine.Execution.Nodes;
+﻿using VorNet.SharpFlow.Engine.Execution;
+using VorNet.SharpFlow.Engine.Execution.Nodes;
 using VorNet.SharpFlow.Engine.Handles;
 
 namespace VorNet.SharpFlow.Engine.Nodes
 {
     public class SearchGoogleNode : NodeBase
     {
-        public SearchGoogleNode(string id)
-            : base("searchGoogle", id)
+        public SearchGoogleNode(IBufferedLogger logger, string id)
+            : base(logger, "searchGoogle", id)
         {
             AddHandle(new ExecHandle("execIn", IHandle.HandleDireciton.Target));
             AddHandle(new StringHandle("searchText", IHandle.HandleDireciton.Target));
@@ -23,6 +24,8 @@ namespace VorNet.SharpFlow.Engine.Nodes
 
             // Google search.
             string searchResult = "search_result";
+
+            BufferedLogger.Log($"Searching google for {searchText} and found {searchResult}.");
 
             var outputHandle = GetHandleById("searchResult");
             outputHandle.Value = searchResult;

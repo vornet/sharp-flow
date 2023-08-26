@@ -8,10 +8,10 @@ namespace VorNet.SharpFlow.Engine.Execution
         public List<INode> Nodes { get; } = new List<INode>();
         public List<IEdge> Edges { get; } = new List<IEdge>();
 
-        public Graph()
+        public Graph(IBufferedLogger logger)
         {
-            AddNode(new StartNode());
-            AddNode(new EndNode());
+            AddNode(new StartNode(logger));
+            AddNode(new EndNode(logger));
         }
 
         public void AddEdge(Edge edge)
