@@ -10,7 +10,7 @@ SharpFlow graphs are built visually by adding nodes and connecting them between 
 
 ![Alt text](images/sharpflow_studio.png)
 
-A node is implemented by inheriting from `NodeBase`, adding handlers, and implmenting the `ExecuteAsync()` method.
+A node is implemented by inheriting from `NodeBase`, adding handlers, and implementing the `ExecuteAsync()` method.
 
 ```csharp
 public class SearchGoogleNode : NodeBase
@@ -41,7 +41,7 @@ public class SearchGoogleNode : NodeBase
 }
 ```
 
-The Framework automatically scan for and add new nodes.
+The Framework automatically scan for and add new nodes to SharpFlow Studio.  New Nodes can be added by referencing a NuGet package or dropping an assembly.
 
 ## Use Cases
 
