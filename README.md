@@ -1,6 +1,8 @@
 # SharpFlow
 
-SharpFlow is a developer-friendly low code framework where developer writes C# code to build reusable nodes and then build flows between them using a visual editor.
+SharpFlow is a developer-friendly low code framework where developer writes C# code to build reusable nodes. Then, non-devleopers can build flows between them using a visual flow editor called SharpFlow Studio.
+
+Once a graph is built, it can be executed directly from SharpFlow Studio, ShapFlow Runner (planned), the RESTful API, or headlessly as part of an application using the `GraphExecutor` class.
 
 ## Example
 
@@ -43,14 +45,15 @@ The Framework automatically scan for and add new nodes.
 
 ## Use Cases
 
-The primary use-case for automation.  Developers build re-usable nodes that performs a certain complex operation such as calling an API endpoint or browser automation.  These nodes are then used by non-developers to archive a set of operations in a certain order or condition.
+The primary use-case is for automation.  Developers build re-usable nodes that performs a certain complex operation such as calling an API endpoint or browser automation.  These nodes are then used by non-developers to archive a set of operations in a certain order or condition.
 
 ## Features / Progress
 
 - A functional SharpFlow Studio. [WIP]
+- A SharpFlow graph runner. [Planned]
 - Ability to save and load graphs. [WIP]
 - SqlLite database for persistence. [WIP]
-- API-based execution of graphs. [WIP]
+- Restful API to execute graphs. [WIP]
 - Headless code-based execution of graphs. [Planned]
 - `if` condition Node. [Done]
 - For loop node. [Planned]
