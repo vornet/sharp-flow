@@ -15,6 +15,8 @@ namespace VorNet.SharpFlow.Engine.Executor
 
         public async Task<string> ExecuteAsync(Graph graph)
         {
+            _bufferedLogger.ClearBuffer();
+
             List<INode> executedNodes = new List<INode>();
 
             _bufferedLogger.Log($"Executing graph {graph.Name}");
@@ -25,6 +27,13 @@ namespace VorNet.SharpFlow.Engine.Executor
             {
                 // Connection from the current node.
                 var connection = graph.Edges.FirstOrDefault(connection => connection.FromHandle == currentNode.ExecOut);
+
+                if (connection == null)
+                {
+                    _bufferedLogger.Log("Error: Graph has incomplete path.");
+                    break;
+                }
+
                 // Get the node at the end of the connection.
                 currentNode = graph.Nodes.FirstOrDefault(node => node.Handles.Contains(connection.ToHandle));
 

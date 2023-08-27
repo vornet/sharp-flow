@@ -10,7 +10,7 @@ namespace VorNet.SharpFlow.Engine.Execution.Nodes
 
         public IHandle ExecIn { get { return GetHandleById("execIn"); } }
 
-        public IHandle ExecOut { get { return GetHandleById("execOut"); } }
+        public virtual IHandle ExecOut { get { return GetHandleById("execOut"); } }
 
         public string Id { get; }
 

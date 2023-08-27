@@ -11,6 +11,8 @@ namespace VorNet.SharpFlow.Engine.Nodes
 {
     public class IfNode : NodeBase
     {
+        private bool _condition;
+
         public IfNode(IBufferedLogger logger, string id)
             : base(logger, "if", id)
         {
@@ -24,7 +26,14 @@ namespace VorNet.SharpFlow.Engine.Nodes
 
         public override async Task ExecuteAsync()
         {
-            bool condition = (bool)GetHandleById("condition").Value;
+            _condition = (bool)GetHandleById("condition").Value;
+        }
+
+        public override IHandle ExecOut {
+            get
+            {
+                return (_condition ? GetHandleById("execOutTrue") : GetHandleById("execOutFalse"));
+            }
         }
     }
 }

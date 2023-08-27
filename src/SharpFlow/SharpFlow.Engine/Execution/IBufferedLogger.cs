@@ -11,5 +11,6 @@ namespace VorNet.SharpFlow.Engine.Execution
         void Log(string log);
 
         string GetBuffer();
+        void ClearBuffer();
     }
 }

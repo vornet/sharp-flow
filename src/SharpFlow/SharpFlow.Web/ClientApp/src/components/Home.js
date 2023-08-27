@@ -36,7 +36,7 @@ const nodeTypes = {
 };
 
 function FlowCanvas() {
-  const [open, setOpen] = React.useState(false);
+  const [nodePickerOpen, setNodePickerOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [rfInstance, setRfInstance] = useState(null);
   const reactFlowWrapper = useRef(null);
@@ -88,7 +88,7 @@ function FlowCanvas() {
   }, [nodes]);
 
   const handleClose = () => {
-    setOpen(false);
+    setNodePickerOpen(false);
   };
 
   const onConnectEnd = useCallback(
@@ -96,7 +96,7 @@ function FlowCanvas() {
       const targetIsPane = event.target.classList.contains('react-flow__pane');
 
       if (targetIsPane) {        
-        setOpen(true);
+        setNodePickerOpen(true);
         let getBoundingClientRect = () => new DOMRect(event.clientX, event.clientY);
         setAnchorEl({ getBoundingClientRect, nodeType: 1 });
       }
@@ -108,7 +108,13 @@ function FlowCanvas() {
     // we need to remove the wrapper bounds, in order to get the correct position
     const { top, left } = reactFlowWrapper.current.getBoundingClientRect();
 
-    const id = `NewNode${getId()}`;
+    let id = `NewNode${getId()}`;
+
+    while (nodes.find(node => node.id === id))
+    {
+      id = `NewNode${getId()}`;
+    }
+
     const newNode = {
       id: id,
       type: 'sharpflow',
@@ -119,10 +125,12 @@ function FlowCanvas() {
 
     setNodes((nds) => nds.concat(newNode));
     const matchingHandle = node.handles.find(handle => handle.type === connectingNode.current.handle.type);
-    if (matchingHandle) {
+    if (connectingNode.current && matchingHandle) {
       setEdges((eds) => eds.concat({ id, source: connectingNode.current.node.id, sourceHandle: connectingNode.current.handle.id, target: id, targetHandle: matchingHandle.id }));
     }
-    setOpen(false);
+    
+    connectingNode.current = null;
+    setNodePickerOpen(false);
   }, [anchorEl, connectingNode]);
 
   const isValidConnection = (connection) => {
@@ -156,8 +164,17 @@ function FlowCanvas() {
     });
   };
 
+  const handleContextMenu = (event) => {
+    event.preventDefault();
+
+    setNodePickerOpen(true);
+    let getBoundingClientRect = () => new DOMRect(event.clientX, event.clientY);
+    setAnchorEl({ getBoundingClientRect, nodeType: 1 });
+
+  };
+
   return (
-      <Box style={{ width: 'calc(100vw - 20px)', height: 'calc(100vh - 80px)' }} ref={reactFlowWrapper}>
+      <Box onContextMenu={handleContextMenu} style={{ cursor: 'context-menu', width: 'calc(100vw - 20px)', height: 'calc(100vh - 80px)' }} ref={reactFlowWrapper}>
         <ReactFlow
           onInit={setRfInstance}
           nodes={nodes}
@@ -190,7 +207,7 @@ function FlowCanvas() {
         </ReactFlow>
         <Popover
           id={id}
-          open={open}
+          open={nodePickerOpen}
           anchorEl={anchorEl}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
           onClose={handleClose}
