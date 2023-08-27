@@ -118,7 +118,10 @@ function FlowCanvas() {
     };
 
     setNodes((nds) => nds.concat(newNode));
-    setEdges((eds) => eds.concat({ id, source: connectingNode.current.node.id, sourceHandle: connectingNode.current.handle.id, target: id, targetHandle: node.handles.find(handle => handle.type === connectingNode.current.handle.type).id }));
+    const matchingHandle = node.handles.find(handle => handle.type === connectingNode.current.handle.type);
+    if (matchingHandle) {
+      setEdges((eds) => eds.concat({ id, source: connectingNode.current.node.id, sourceHandle: connectingNode.current.handle.id, target: id, targetHandle: matchingHandle.id }));
+    }
     setOpen(false);
   }, [anchorEl, connectingNode]);
 
