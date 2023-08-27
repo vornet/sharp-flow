@@ -1,6 +1,6 @@
 # SharpFlow
 
-SharpFlow is a developer-friendly low code framework where developer writes C# code to build reusable nodes. Then, non-devleopers can build flows between them using a visual flow editor called SharpFlow Studio.
+SharpFlow is a developer-friendly low code framework where developer writes C# code to build reusable nodes. Then, non-developers can build flows between them using a visual flow editor called SharpFlow Studio.
 
 Once a graph is built, it can be executed directly from SharpFlow Studio, ShapFlow Runner (planned), the RESTful API, or headlessly as part of an application using the `GraphExecutor` class.
 
