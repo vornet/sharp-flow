@@ -23,6 +23,7 @@ import ReactFlow, {
   ReactFlowProvider
 } from 'reactflow';
 import SharpflowNode from './SharpFlowNode';
+import SecretsStringNode from './SecretsStringNode';
 
 import 'reactflow/dist/style.css';
 import '../sharpflow.css';
@@ -33,6 +34,7 @@ const getId = () => `${id++}`;
 
 const nodeTypes = {
   sharpflow: SharpflowNode,
+  secretsString: SecretsStringNode,
 };
 
 function FlowCanvas() {
@@ -58,6 +60,9 @@ function FlowCanvas() {
 
     axios.get('/api/graph/foo')
     .then(function (response) {
+      let secretsNode = response.data.nodes.find(n => n.type==='secretsString');
+      secretsNode.data.update = onNodeChange;
+
       setNodes(response.data.nodes);
       setEdges(response.data.edges);
     })
@@ -104,6 +109,29 @@ function FlowCanvas() {
     [project]
   );
 
+  const onNodeChange = (event) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.type !== 'secretsString') {
+          return node;
+        }
+
+        const Secret = event.target.value;
+
+        return {
+          ...node,
+          data: {
+            ...node.data,
+            state: {
+              Secret
+            },
+          },
+        };
+      })
+    );
+  };
+
+
   const onAddNode = useCallback((node) => {
     // we need to remove the wrapper bounds, in order to get the correct position
     const { top, left } = reactFlowWrapper.current.getBoundingClientRect();
@@ -115,16 +143,30 @@ function FlowCanvas() {
       id = `NewNode${getId()}`;
     }
 
+    let type = 'sharpflow';
+
+    if (node.type === "VorNet.SharpFlow.Engine.Nodes.SecretStringNode")
+    {
+      type = 'secretsString'
+    }
+
+    console.log(node.handles);
+
     const newNode = {
       id: id,
-      type: 'sharpflow',
+      type: type,
       // we are removing the half of the node width (75) to center the new node
       position: project({ x: anchorEl.getBoundingClientRect().x - left - 75, y: anchorEl.getBoundingClientRect().y - top }),
-      data: { type: node.type, displayType: node.displayType, handles: node.handles },
+      data: { type: node.type, displayType: node.displayType, handles: node.handles, update: onNodeChange },
     };
 
     setNodes((nds) => nds.concat(newNode));
-    const matchingHandle = node.handles.find(handle => handle.type === connectingNode.current.handle.type);
+
+    let matchingHandle = null;
+    
+    if (connectingNode.current) {
+      matchingHandle = node.handles.find(handle => handle.type === connectingNode.current.handle.type);
+    }
     if (connectingNode.current && matchingHandle) {
       setEdges((eds) => eds.concat({ id, source: connectingNode.current.node.id, sourceHandle: connectingNode.current.handle.id, target: id, targetHandle: matchingHandle.id }));
     }
