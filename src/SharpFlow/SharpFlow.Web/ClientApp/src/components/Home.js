@@ -24,6 +24,9 @@ import ReactFlow, {
 } from 'reactflow';
 import SharpflowNode from './SharpFlowNode';
 import SecretsStringNode from './SecretsStringNode';
+import LiteralStringNode from './LiteralStringNode';
+import LiteralIntNode from './LiteralIntNode';
+import LiteralDoubleNode from './LiteralDoubleNode';
 
 import 'reactflow/dist/style.css';
 import '../sharpflow.css';
@@ -35,6 +38,9 @@ const getId = () => `${id++}`;
 const nodeTypes = {
   sharpflow: SharpflowNode,
   secretsString: SecretsStringNode,
+  literalString: LiteralStringNode,
+  literalInt: LiteralIntNode,
+  literalDouble: LiteralDoubleNode,
 };
 
 function FlowCanvas() {
@@ -109,22 +115,30 @@ function FlowCanvas() {
     [project]
   );
 
-  const onNodeChange = (event) => {
+  const onNodeChange = (id, value) => {
     setNodes((nds) =>
       nds.map((node) => {
-        if (node.type !== 'secretsString') {
+        if (node.id !== id) {
           return node;
         }
 
-        const Secret = event.target.value;
+        let newState = {}
+
+        if (node.type === "secretsString") {
+          newState = { Secret: value }
+        } else if (node.type === "literalString") {
+          newState = { Text: value }
+        } else if (node.type === "literalInt") {
+          newState = { Number: value }
+        } else if (node.type === "literalDouble") {
+          newState = { Number: value }
+        }
 
         return {
           ...node,
           data: {
             ...node.data,
-            state: {
-              Secret
-            },
+            state: newState,
           },
         };
       })
@@ -145,9 +159,14 @@ function FlowCanvas() {
 
     let type = 'sharpflow';
 
-    if (node.type === "VorNet.SharpFlow.Engine.Nodes.SecretStringNode")
-    {
+    if (node.type === "VorNet.SharpFlow.Engine.Nodes.SecretStringNode") {
       type = 'secretsString'
+    } else if (node.type === "VorNet.SharpFlow.Engine.Nodes.LiteralStringNode") {
+      type = 'literalString'
+    } else if (node.type === "VorNet.SharpFlow.Engine.Nodes.LiteralIntNode") {
+      type = 'literalInt'
+    } else if (node.type === "VorNet.SharpFlow.Engine.Nodes.LiteralDoubleNode") {
+      type = 'literalDouble'
     }
 
     console.log(node.handles);

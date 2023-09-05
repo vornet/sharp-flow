@@ -11,11 +11,11 @@ function Select({ handle, position }) {
     );
 }
 
-function SecretsStringNode({ id, data }) {
-  const [secret, setSecret] = React.useState();
+function LiteralIntNode({ id, data }) {
+  const [number, setNumber] = React.useState(0);
 
   useEffect(() => {
-    setSecret(data?.state?.Secret ?? "");
+    setNumber(data?.state?.Number ?? 0);
   }, [data]);
 
   return (
@@ -25,14 +25,17 @@ function SecretsStringNode({ id, data }) {
         </div>
         <div>
           <TextField 
-            label="Secret"
-            type="password"
+            label="Number"
             size="small"
             variant="standard"
-            value={secret}
+            value={number}
             onChange={(e) => {
-              setSecret(e.target.value);
-              data.update(id, e.target.value);
+              const regex = /^[0-9\b]+$/;
+              if (e.target.value === "" || regex.test(e.target.value)) {
+                console.log(e.target.value);
+                setNumber(e.target.value);
+                data.update(id, e.target.value);
+              }
             }}
           />
         </div>
@@ -52,4 +55,4 @@ function SecretsStringNode({ id, data }) {
   );
 }
 
-export default memo(SecretsStringNode);
+export default memo(LiteralIntNode);

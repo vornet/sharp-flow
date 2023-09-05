@@ -11,11 +11,11 @@ function Select({ handle, position }) {
     );
 }
 
-function SecretsStringNode({ id, data }) {
-  const [secret, setSecret] = React.useState();
+function LiteralStringNode({ id, data }) {
+  const [text, setText] = React.useState();
 
   useEffect(() => {
-    setSecret(data?.state?.Secret ?? "");
+    setText(data?.state?.Text ?? "");
   }, [data]);
 
   return (
@@ -25,14 +25,13 @@ function SecretsStringNode({ id, data }) {
         </div>
         <div>
           <TextField 
-            label="Secret"
-            type="password"
+            label="Text"
             size="small"
             variant="standard"
-            value={secret}
-            onChange={(e) => {
-              setSecret(e.target.value);
-              data.update(id, e.target.value);
+            value={text}
+            onChange={(event) => {
+              setText(event.target.value);
+              data.update(id, event.target.value);
             }}
           />
         </div>
@@ -52,4 +51,4 @@ function SecretsStringNode({ id, data }) {
   );
 }
 
-export default memo(SecretsStringNode);
+export default memo(LiteralStringNode);

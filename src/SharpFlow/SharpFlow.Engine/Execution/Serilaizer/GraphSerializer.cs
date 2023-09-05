@@ -85,11 +85,20 @@ namespace VorNet.SharpFlow.Engine.Serilaizer
                     {
                         var p = instance.GetType().GetProperty(key);
                         var valueJsonElement = (JsonElement)node.Data.State[key];
-                        if (valueJsonElement.ValueKind == JsonValueKind.String)
+                        if (p.PropertyType == typeof(string))
                         {
                             p.SetValue(instance, valueJsonElement.GetString());
                         }
 
+                        if (p.PropertyType == typeof(double))
+                        {
+                            p.SetValue(instance, double.Parse(valueJsonElement.GetString()));
+                        }
+
+                        if (p.PropertyType == typeof(int))
+                        {
+                            p.SetValue(instance, int.Parse(valueJsonElement.GetString()));
+                        }
                     }
                 }
 
