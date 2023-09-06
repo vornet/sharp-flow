@@ -110,6 +110,9 @@ namespace VorNet.SharpFlow.Engine.Serilaizer
                 var sourceNode = result.GetNodeById(edge.Source);
                 var targetNode = result.GetNodeById(edge.Target);
 
+                // Skip invalid edges.
+                if (sourceNode == null || targetNode == null) { continue; }
+
                 result.AddEdge(new Execution.Edges.Edge(sourceNode.Handles.FirstOrDefault(h => h.Id == edge.SourceHandle), targetNode.Handles.FirstOrDefault(h => h.Id == edge.TargetHandle)));
             }
 

@@ -11,10 +11,15 @@ function Select({ handle, position }) {
 }
 
 function SharpFlowNode({ id, data }) {
+  
+  const onIdBlur = React.useCallback(evt => {
+    data.changeNodeId(id, evt.currentTarget.innerHTML);
+  }, [])
+
   return (
     <>
         <div className="custom-node__header">
-            <strong>{id}{data.displayType?.length > 0 && ` : ${data.displayType}`}</strong>
+            <strong><span contentEditable onBlur={onIdBlur} dangerouslySetInnerHTML={{__html: id}} />{data.displayType?.length > 0 && ` : ${data.displayType}`}</strong>
         </div>
         <div className="custom-node__body">
             <div className="custom-node__column-left">

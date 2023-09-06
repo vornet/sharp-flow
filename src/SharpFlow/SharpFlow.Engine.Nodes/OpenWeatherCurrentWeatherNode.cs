@@ -45,7 +45,7 @@ namespace VorNet.SharpFlow.Engine.Nodes
             string appid = (string)appidHandle.Value;
 
             using HttpClient client = new();
-            var response = await client.GetAsync($"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={appid}");
+            var response = await client.GetAsync($"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={appid}&units=imperial");
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
 

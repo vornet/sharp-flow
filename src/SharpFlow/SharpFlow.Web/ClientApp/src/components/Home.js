@@ -66,8 +66,16 @@ function FlowCanvas() {
 
     axios.get('/api/graph/foo')
     .then(function (response) {
-      let secretsNode = response.data.nodes.find(n => n.type==='secretsString');
-      secretsNode.data.update = onNodeChange;
+
+      response.data.nodes.forEach(node => {
+        node.data.changeNodeId = onChangeNodeId;
+      });
+
+      let secretsNodes = response.data.nodes.filter(n => n.type==='secretsString');
+
+      secretsNodes.forEach(node => {
+        node.data.update = onNodeChange;
+      });
 
       setNodes(response.data.nodes);
       setEdges(response.data.edges);
@@ -145,6 +153,21 @@ function FlowCanvas() {
     );
   };
 
+  const onChangeNodeId = (oldId, newId) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id !== oldId) {
+          return node;
+        }
+
+        return {
+          ...node,
+          id: newId,
+        };
+      })
+    );
+  };
+
 
   const onAddNode = useCallback((node) => {
     // we need to remove the wrapper bounds, in order to get the correct position
@@ -176,7 +199,7 @@ function FlowCanvas() {
       type: type,
       // we are removing the half of the node width (75) to center the new node
       position: project({ x: anchorEl.getBoundingClientRect().x - left - 75, y: anchorEl.getBoundingClientRect().y - top }),
-      data: { type: node.type, displayType: node.displayType, handles: node.handles, update: onNodeChange },
+      data: { type: node.type, displayType: node.displayType, handles: node.handles, update: onNodeChange, changeNodeId: onChangeNodeId },
     };
 
     setNodes((nds) => nds.concat(newNode));
